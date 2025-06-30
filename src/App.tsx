@@ -1,5 +1,11 @@
+import { Button } from "./components/ui/button";
+
 const App = () => {
-  return <div className="text-red-500 text-2xl">App</div>;
+  return (
+    <div className="p-4">
+      <Button>Hello</Button>
+    </div>
+  );
 };
 
 export default App;
