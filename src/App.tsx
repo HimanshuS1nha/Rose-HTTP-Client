@@ -1,10 +1,10 @@
-import { Button } from "./components/ui/button";
-
 const App = () => {
   return (
-    <div className="p-4">
-      <Button>Hello</Button>
-    </div>
+    <main className="flex w-dvw h-dvh">
+      <div className="w-[20%] border-r border-r-gray-300"></div>
+      <div className="w-[45%] border-r border-r-gray-300"></div>
+      <div className="w-[35%] border-r border-r-gray-300"></div>
+    </main>
   );
 };
 
