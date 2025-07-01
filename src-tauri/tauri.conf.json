@@ -12,8 +12,8 @@
   "app": {
     "windows": [
       {
-        "title": "rose-http-client",
-        "width": 800,
+        "title": "Rose",
+        "width": 1200,
         "height": 600
       }
     ],
