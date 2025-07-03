@@ -13,10 +13,14 @@ struct Response {
 }
 
 #[tauri::command]
-async fn make_request(method: &str, url: &str) -> Result<Response, HttpError> {
+async fn make_request(
+    method: &str,
+    url: &str,
+    headers: Vec<String>,
+) -> Result<Response, HttpError> {
     let client = Client::new();
 
-    let request_builder = if method == "get" {
+    let mut request_builder = if method == "get" {
         client.get(url)
     } else if method == "post" {
         client.post(url)
@@ -27,6 +31,16 @@ async fn make_request(method: &str, url: &str) -> Result<Response, HttpError> {
     } else {
         client.delete(url)
     };
+
+    for header in headers {
+        let header_tuple = header.split_once(":");
+
+        if let Some(header_tuple) = header_tuple {
+            request_builder = request_builder.header(header_tuple.0, header_tuple.1);
+        } else {
+            return Err(HttpError::InvalidHeadersError);
+        }
+    }
 
     let response = request_builder.send().await.map_err(|e| {
         HttpError::RequestError(

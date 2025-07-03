@@ -35,6 +35,13 @@ const RequestSection = () => {
       const result = await invoke("make_request", {
         method: requestMethod,
         url,
+        headers: headers.flatMap((header) => {
+          if (header[0]) {
+            return `${header[1]}:${header[2]}`;
+          } else {
+            return [];
+          }
+        }),
       });
 
       return result;
