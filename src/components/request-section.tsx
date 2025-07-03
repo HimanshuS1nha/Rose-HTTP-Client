@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { invoke } from "@tauri-apps/core";
 
 import {
   Select,
@@ -15,9 +17,34 @@ import { requestMethods } from "@/constants/request-methods";
 
 const RequestSection = () => {
   const [requestMethod, setRequestMethod] = useState("get");
+  const [url, setUrl] = useState("");
+
+  const { mutate: handleMakeRequest, isPending } = useMutation({
+    mutationKey: [`make-${requestMethod}-request`],
+    mutationFn: async () => {
+      const result = await invoke("make_request", {
+        method: requestMethod,
+        url,
+      });
+
+      return result;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
   return (
     <div className="py-2 flex flex-col gap-y-1.5">
-      <form className="flex px-1">
+      <form
+        className="flex px-1"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleMakeRequest();
+        }}
+      >
         <Select
           value={requestMethod}
           onValueChange={(value) => setRequestMethod(value)}
@@ -43,9 +70,11 @@ const RequestSection = () => {
         <Input
           placeholder="Enter URL"
           className="rounded-none focus-visible:ring-0"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
         />
 
-        <Button className="rounded-none" type="submit">
+        <Button className="rounded-none" type="submit" disabled={isPending}>
           Send
         </Button>
       </form>
