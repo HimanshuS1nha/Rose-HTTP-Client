@@ -25,6 +25,9 @@ const RequestSection = () => {
   const [queryParameters, setQueryParameters] = useState<
     [boolean, string, string][]
   >([[false, "", ""]]);
+  const [formData, setFormData] = useState<[boolean, string, string][]>([
+    [false, "", ""],
+  ]);
 
   const { mutate: handleMakeRequest, isPending } = useMutation({
     mutationKey: [`make-${requestMethod}-request`],
@@ -88,6 +91,29 @@ const RequestSection = () => {
       });
     },
     [queryParameters, setQueryParameters]
+  );
+
+  const updateFormData = useCallback(
+    (index: number, type: "checkbox" | "key" | "value", value?: string) => {
+      setFormData((prev) => {
+        const newFormData = prev.map((formData, i) => {
+          if (i === index) {
+            if (type === "checkbox") {
+              return [!formData[0], formData[1], formData[2]];
+            } else if (type === "key") {
+              return [formData[0], value, formData[2]];
+            } else {
+              return [formData[0], formData[1], value];
+            }
+          } else {
+            return formData;
+          }
+        });
+
+        return newFormData as [boolean, string, string][];
+      });
+    },
+    [formData, setFormData]
   );
   return (
     <div className="py-2 flex flex-col gap-y-1.5">
@@ -203,6 +229,48 @@ const RequestSection = () => {
           }}
           tabValue="headers"
         />
+
+        <TabsContent value="body">
+          <Tabs defaultValue="json">
+            <TabsList className="bg-transparent w-[20%] gap-x-1.5 px-1">
+              <TabsTrigger
+                value="json"
+                className="text-gray-700 data-[state=active]:bg-transparent data-[state=active]:text-black data-[state=active]:border-b-3 data-[state=active]:border-b-primary data-[state=active]:shadow-none focus-visible:border-none focus-within:ring-0 rounded-none cursor-pointer hover:text-black"
+              >
+                JSON
+              </TabsTrigger>
+              <TabsTrigger
+                value="form"
+                className="text-gray-700 data-[state=active]:bg-transparent data-[state=active]:text-black data-[state=active]:border-b-3 data-[state=active]:border-b-primary data-[state=active]:shadow-none focus-visible:border-none focus-within:ring-0 rounded-none cursor-pointer hover:text-black"
+              >
+                Form
+              </TabsTrigger>
+            </TabsList>
+
+            <KeyValueInput
+              state={formData}
+              updateState={updateFormData}
+              title="Form Fields"
+              addOne={() => {
+                setFormData((prev) => {
+                  const newFormData = [...prev, [false, "", ""]] as [
+                    boolean,
+                    string,
+                    string
+                  ][];
+
+                  return newFormData;
+                });
+              }}
+              removeOne={(index) => {
+                if (index !== 0) {
+                  setFormData((prev) => prev.filter((_, i) => i !== index));
+                }
+              }}
+              tabValue="form"
+            />
+          </Tabs>
+        </TabsContent>
       </Tabs>
     </div>
   );
