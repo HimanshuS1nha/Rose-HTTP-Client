@@ -12,6 +12,7 @@ enum HttpError {
 #[derive(Serialize, Deserialize)]
 struct Response {
     body: String,
+    status: String,
     time: u128,
 }
 
@@ -54,6 +55,8 @@ async fn make_request(
         )
     })?;
 
+    let response_status = response.status().to_string();
+    
     let bytes = response.bytes().await.map_err(|e| {
         HttpError::RequestError(
             e.status().unwrap().to_string(),
@@ -64,9 +67,11 @@ async fn make_request(
 
     let duration = start_time.elapsed().as_millis();
 
+
     Ok(Response {
         body,
         time: duration,
+        status: response_status,
     })
 }
 
