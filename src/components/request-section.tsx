@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { invoke } from "@tauri-apps/core";
+import { invoke } from "@tauri-apps/api/core";
 
 import {
   Select,
