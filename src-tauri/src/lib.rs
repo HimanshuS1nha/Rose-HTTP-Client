@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 
@@ -10,6 +12,7 @@ enum HttpError {
 #[derive(Serialize, Deserialize)]
 struct Response {
     body: String,
+    time: u128,
 }
 
 #[tauri::command]
@@ -42,6 +45,8 @@ async fn make_request(
         }
     }
 
+    let start_time = Instant::now();
+
     let response = request_builder.send().await.map_err(|e| {
         HttpError::RequestError(
             e.status().unwrap().to_string(),
@@ -57,7 +62,12 @@ async fn make_request(
     })?;
     let body = String::from_utf8_lossy(&bytes).to_string();
 
-    Ok(Response { body })
+    let duration = start_time.elapsed().as_millis();
+
+    Ok(Response {
+        body,
+        time: duration,
+    })
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
