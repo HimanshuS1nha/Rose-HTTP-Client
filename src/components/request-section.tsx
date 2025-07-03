@@ -22,6 +22,9 @@ const RequestSection = () => {
   const [headers, setHeaders] = useState<[boolean, string, string][]>([
     [false, "", ""],
   ]);
+  const [queryParameters, setQueryParameters] = useState<
+    [boolean, string, string][]
+  >([[false, "", ""]]);
 
   const { mutate: handleMakeRequest, isPending } = useMutation({
     mutationKey: [`make-${requestMethod}-request`],
@@ -62,6 +65,29 @@ const RequestSection = () => {
       });
     },
     [headers, setHeaders]
+  );
+
+  const updateQueryParameters = useCallback(
+    (index: number, type: "checkbox" | "key" | "value", value?: string) => {
+      setQueryParameters((prev) => {
+        const newQueryParameters = prev.map((queryParameter, i) => {
+          if (i === index) {
+            if (type === "checkbox") {
+              return [!queryParameter[0], queryParameter[1], queryParameter[2]];
+            } else if (type === "key") {
+              return [queryParameter[0], value, queryParameter[2]];
+            } else {
+              return [queryParameter[0], queryParameter[1], value];
+            }
+          } else {
+            return queryParameter;
+          }
+        });
+
+        return newQueryParameters as [boolean, string, string][];
+      });
+    },
+    [queryParameters, setQueryParameters]
   );
   return (
     <div className="py-2 flex flex-col gap-y-1.5">
@@ -131,6 +157,29 @@ const RequestSection = () => {
 
           <div className="w-full h-[0.5px] bg-gray-300 -mt-1" />
         </div>
+
+        <KeyValueInput
+          state={queryParameters}
+          updateState={updateQueryParameters}
+          title="Query Parameters"
+          addOne={() => {
+            setQueryParameters((prev) => {
+              const newQueryParameters = [...prev, [false, "", ""]] as [
+                boolean,
+                string,
+                string
+              ][];
+
+              return newQueryParameters;
+            });
+          }}
+          removeOne={(index) => {
+            if (index !== 0) {
+              setQueryParameters((prev) => prev.filter((_, i) => i !== index));
+            }
+          }}
+          tabValue="query"
+        />
 
         <KeyValueInput
           state={headers}
