@@ -1,4 +1,13 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 
 const ResponseSection = () => {
   return (
@@ -33,6 +42,43 @@ const ResponseSection = () => {
           </TabsList>
           <div className="w-full h-[0.5px] bg-gray-300 -mt-1" />
         </div>
+
+        <TabsContent value="response">
+          <div className="flex flex-col gap-y-3 px-2 mt-2">
+            <p className="text-lg">Response</p>
+
+            <Textarea
+              className="rounded-none min-h-60 focus-visible:border-black focus-visible:ring-0"
+              contentEditable={false}
+              readOnly
+            />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="headers">
+          <div className="flex flex-col gap-y-3 px-2 mt-2">
+            <p className="text-lg">Response Headers</p>
+
+            <Table className="border">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="border-r">Header</TableHead>
+                  <TableHead className="border-r">Value</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="border-r">Content-Type</TableCell>
+                  <TableCell className="border-r">application/json</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="border-r">Token</TableCell>
+                  <TableCell className="border-r">12345678</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   );
