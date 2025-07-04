@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::time::Instant;
 
 use reqwest::Client;
@@ -21,6 +22,7 @@ async fn make_request(
     method: &str,
     url: &str,
     headers: Vec<String>,
+    form: HashMap<String, String>,
 ) -> Result<Response, HttpError> {
     let client = Client::new();
 
@@ -46,6 +48,10 @@ async fn make_request(
         }
     }
 
+    if form.len() > 0 {
+        request_builder = request_builder.form(&form);
+    }
+
     let start_time = Instant::now();
 
     let response = request_builder.send().await.map_err(|e| {
@@ -56,7 +62,7 @@ async fn make_request(
     })?;
 
     let response_status = response.status().to_string();
-    
+
     let bytes = response.bytes().await.map_err(|e| {
         HttpError::RequestError(
             e.status().unwrap().to_string(),
@@ -66,7 +72,6 @@ async fn make_request(
     let body = String::from_utf8_lossy(&bytes).to_string();
 
     let duration = start_time.elapsed().as_millis();
-
 
     Ok(Response {
         body,

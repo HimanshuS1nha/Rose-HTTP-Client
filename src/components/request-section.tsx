@@ -32,6 +32,10 @@ const RequestSection = () => {
   const { mutate: handleMakeRequest, isPending } = useMutation({
     mutationKey: [`make-${requestMethod}-request`],
     mutationFn: async () => {
+      const form = formData.flatMap((data) =>
+        data[0] ? [data[1], data[2]] : []
+      );
+
       const result = await invoke("make_request", {
         method: requestMethod,
         url,
@@ -42,6 +46,7 @@ const RequestSection = () => {
             return [];
           }
         }),
+        form: new Map([form as [string, string]]),
       });
 
       return result;
