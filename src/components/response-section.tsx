@@ -9,18 +9,59 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 
+import { cn } from "@/lib/utils";
+
+import { useResponse } from "@/hooks/use-response";
+
 const ResponseSection = () => {
+  const response = useResponse((state) => state.response);
   return (
     <div className="px-2 py-3 flex flex-col gap-y-1.5 overflow-y-auto">
       <div className="flex gap-x-4 items-center">
         <p>
-          Status: <span className="text-emerald-600 font-semibold">200</span>
+          Status:{" "}
+          <span
+            className={cn(
+              "font-semibold",
+              response?.status.startsWith("20")
+                ? "text-emerald-600"
+                : response?.status.startsWith("30")
+                ? "text-yellow-500"
+                : "text-primary"
+            )}
+          >
+            {response?.status}
+          </span>
         </p>
         <p>
-          Size: <span className="text-emerald-600 font-semibold">2 KB</span>
+          Size:{" "}
+          <span
+            className={cn(
+              "font-semibold",
+              response?.status.startsWith("20")
+                ? "text-emerald-600"
+                : response?.status.startsWith("30")
+                ? "text-yellow-500"
+                : "text-primary"
+            )}
+          >
+            {response?.size && `${response?.size.toFixed(4)} KB`}
+          </span>
         </p>
         <p>
-          Time: <span className="text-emerald-600 font-semibold">300 ms</span>
+          Time:{" "}
+          <span
+            className={cn(
+              "font-semibold",
+              response?.status.startsWith("20")
+                ? "text-emerald-600"
+                : response?.status.startsWith("30")
+                ? "text-yellow-500"
+                : "text-primary"
+            )}
+          >
+            {response?.time && `${response.time} ms`}
+          </span>
         </p>
       </div>
 
@@ -67,14 +108,17 @@ const ResponseSection = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell className="border-r">Content-Type</TableCell>
-                  <TableCell className="border-r">application/json</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border-r">Token</TableCell>
-                  <TableCell className="border-r">12345678</TableCell>
-                </TableRow>
+                {response?.headers &&
+                  Object.keys(response.headers).map((key) => {
+                    return (
+                      <TableRow key={key}>
+                        <TableCell className="border-r">{key}</TableCell>
+                        <TableCell className="border-r">
+                          {response.headers[key]}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           </div>

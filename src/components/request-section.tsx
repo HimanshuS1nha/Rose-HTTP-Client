@@ -14,9 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KeyValueInput from "@/components/key-value-input";
 
+import { useResponse } from "@/hooks/use-response";
+
 import { requestMethods } from "@/constants/request-methods";
 
 const RequestSection = () => {
+  const setResponse = useResponse((state) => state.setResponse);
+
   const [requestMethod, setRequestMethod] = useState("get");
   const [url, setUrl] = useState("");
   const [headers, setHeaders] = useState<[boolean, string, string][]>([
@@ -49,10 +53,17 @@ const RequestSection = () => {
         form: new Map([form as [string, string]]),
       });
 
-      return result;
+      return result as {
+        body: string;
+        headers: { [key: string]: string };
+        status: string;
+        size: number;
+        time: number;
+        is_response_json_type: boolean;
+      };
     },
     onSuccess: (data) => {
-      console.log(data);
+      setResponse(data);
     },
     onError: (error) => {
       console.error(error);
