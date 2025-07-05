@@ -91,6 +91,11 @@ const ResponseSection = () => {
             <Textarea
               className="rounded-none min-h-60 focus-visible:border-black focus-visible:ring-0"
               contentEditable={false}
+              value={
+                response?.is_response_json_type
+                  ? JSON.stringify(JSON.parse(response?.body ?? ""), null, 2)
+                  : response?.body ?? ""
+              }
               readOnly
             />
           </div>

@@ -36,13 +36,33 @@ const RequestSection = () => {
   const { mutate: handleMakeRequest, isPending } = useMutation({
     mutationKey: [`make-${requestMethod}-request`],
     mutationFn: async () => {
+      let updatedUrl = url;
+
+      if (
+        (queryParameters.length > 1 &&
+          queryParameters.find((item) => item[0])) ||
+        queryParameters[0][0]
+      ) {
+        updatedUrl += "?";
+
+        queryParameters.map((queryParameter, i) => {
+          if (queryParameter[0]) {
+            updatedUrl += `${queryParameter[1]}=${queryParameter[2]}`;
+          }
+
+          if (i !== queryParameters.length) {
+            updatedUrl += "&";
+          }
+        });
+      }
+
       const form = formData.flatMap((data) =>
         data[0] ? [data[1], data[2]] : []
       );
 
       const result = await invoke("make_request", {
         method: requestMethod,
-        url,
+        url: updatedUrl,
         headers: headers.flatMap((header) => {
           if (header[0]) {
             return `${header[1]}:${header[2]}`;
