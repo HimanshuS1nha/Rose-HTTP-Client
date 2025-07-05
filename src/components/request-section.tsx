@@ -65,8 +65,8 @@ const RequestSection = () => {
     onSuccess: (data) => {
       setResponse(data);
     },
-    onError: (error) => {
-      console.error(error);
+    onError: (error: { RequestError: string[] }) => {
+      console.error(`Error ${error.RequestError[0]}: ${error.RequestError[1]}`);
     },
   });
 

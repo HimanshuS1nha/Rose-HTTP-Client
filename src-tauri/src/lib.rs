@@ -59,7 +59,10 @@ async fn make_request(
 
     let response = request_builder.send().await.map_err(|e| {
         HttpError::RequestError(
-            e.status().unwrap().to_string(),
+            match e.status() {
+                Some(status) => status.to_string(),
+                None => "404 NOT FOUND".to_string(),
+            },
             "Error in making the request".to_string(),
         )
     })?;
