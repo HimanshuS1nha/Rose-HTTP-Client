@@ -16,6 +16,8 @@ struct Response {
     status: String,
     time: u128,
     size: f64,
+    headers: HashMap<String, String>,
+    is_response_json_type: bool,
 }
 
 #[tauri::command]
@@ -62,6 +64,23 @@ async fn make_request(
         )
     })?;
 
+    let mut is_response_json_type = false;
+
+    let mut response_headers: HashMap<String, String> = HashMap::new();
+
+    for header in response.headers() {
+        let key = header.0.to_string();
+        let value = header.1.to_str().unwrap_or_default().to_string();
+
+        if key.to_lowercase() == "content-type" {
+            if value.to_lowercase().contains("application/json") {
+                is_response_json_type = true;
+            }
+        }
+
+        response_headers.insert(key, value);
+    }
+
     let response_status = response.status().to_string();
 
     let bytes = response.bytes().await.map_err(|e| {
@@ -82,6 +101,8 @@ async fn make_request(
         time: duration,
         status: response_status,
         size: size_kb,
+        headers: response_headers,
+        is_response_json_type,
     })
 }
 
