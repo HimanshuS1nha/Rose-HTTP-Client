@@ -15,6 +15,7 @@ struct Response {
     body: String,
     status: String,
     time: u128,
+    size: f64,
 }
 
 #[tauri::command]
@@ -71,12 +72,16 @@ async fn make_request(
     })?;
     let body = String::from_utf8_lossy(&bytes).to_string();
 
+    let size_bytes = bytes.len();
+    let size_kb = size_bytes as f64 / 1024.0;
+
     let duration = start_time.elapsed().as_millis();
 
     Ok(Response {
         body,
         time: duration,
         status: response_status,
+        size: size_kb,
     })
 }
 
