@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
+import toast from "react-hot-toast";
 
 import {
   Select,
@@ -92,7 +93,11 @@ const RequestSection = () => {
       setResponse(data);
     },
     onError: (error: { RequestError: string[] }) => {
-      console.error(`Error ${error.RequestError[0]}: ${error.RequestError[1]}`);
+      if (error.RequestError) {
+        toast.error(`Error ${error.RequestError[0]}: ${error.RequestError[1]}`);
+      } else {
+        toast.error((error as any).message);
+      }
     },
   });
 

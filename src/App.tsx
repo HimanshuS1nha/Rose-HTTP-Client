@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { load } from "@tauri-apps/plugin-store";
+import toast from "react-hot-toast";
 
 import Sidebar from "@/components/sidebar";
 import RequestSection from "@/components/request-section";
@@ -20,20 +21,21 @@ const App = () => {
     queryFn: async () => {
       const store = await load("rose.json", { autoSave: false });
 
+      await getRequests(store);
+
       return store;
     },
   });
 
   useEffect(() => {
     if (error) {
-      alert("Error in loading previous requests");
+      toast.error("Error in loading previous requests");
     }
   }, [error]);
 
   useEffect(() => {
     if (data) {
       setStore(data);
-      getRequests(data);
     }
   }, [data]);
   return (
