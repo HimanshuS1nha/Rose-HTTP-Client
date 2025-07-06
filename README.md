@@ -2,6 +2,10 @@
 
 Rose is a lightweight, intuitive HTTP client designed for seamless API testing, featuring a user-friendly interface and robust performance for developers and testers.
 
+## Screenshots
+
+![Rose HTTP Client](https://github.com/user-attachments/assets/2aad4c92-a278-4296-b633-e9220eb85391)
+
 ## Get Started
 
 - Install dependencies
