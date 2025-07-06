@@ -13,11 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KeyValueInput from "@/components/key-value-input";
+import JsonContentTab from "@/components/json-content-tab";
+import TextContentTab from "@/components/text-content-tab";
 
 import { useResponse } from "@/hooks/use-response";
 
 import { requestMethods } from "@/constants/request-methods";
-import JsonContentTab from "./json-content-tab";
 
 const RequestSection = () => {
   const setResponse = useResponse((state) => state.setResponse);
@@ -34,6 +35,7 @@ const RequestSection = () => {
     [false, "", ""],
   ]);
   const [json, setJson] = useState("");
+  const [text, setText] = useState("");
 
   const { mutate: handleMakeRequest, isPending } = useMutation({
     mutationKey: [`make-${requestMethod}-request`],
@@ -285,6 +287,12 @@ const RequestSection = () => {
                 JSON
               </TabsTrigger>
               <TabsTrigger
+                value="text"
+                className="text-gray-700 data-[state=active]:bg-transparent data-[state=active]:text-black data-[state=active]:border-b-3 data-[state=active]:border-b-primary data-[state=active]:shadow-none focus-visible:border-none focus-within:ring-0 rounded-none cursor-pointer hover:text-black"
+              >
+                Text
+              </TabsTrigger>
+              <TabsTrigger
                 value="form"
                 className="text-gray-700 data-[state=active]:bg-transparent data-[state=active]:text-black data-[state=active]:border-b-3 data-[state=active]:border-b-primary data-[state=active]:shadow-none focus-visible:border-none focus-within:ring-0 rounded-none cursor-pointer hover:text-black"
               >
@@ -293,6 +301,8 @@ const RequestSection = () => {
             </TabsList>
 
             <JsonContentTab data={json} setData={setJson} />
+
+            <TextContentTab data={text} setData={setText} />
 
             <KeyValueInput
               state={formData}
