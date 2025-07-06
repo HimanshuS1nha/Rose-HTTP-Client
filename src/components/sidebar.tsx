@@ -14,7 +14,7 @@ const Sidebar = () => {
   const setRequest = useRequest((state) => state.setRequest);
   return (
     <div className="py-3 flex flex-col gap-y-4">
-      <Button className="mx-2">
+      <Button className="mx-2" onClick={() => setRequest(null)}>
         <Plus />
         New Request
       </Button>

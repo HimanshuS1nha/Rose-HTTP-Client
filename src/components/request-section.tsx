@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
 import toast from "react-hot-toast";
+import { v4 as uuidV4 } from "uuid";
 
 import {
   Select,
@@ -19,13 +20,19 @@ import TextContentTab from "@/components/text-content-tab";
 
 import { useResponse } from "@/hooks/use-response";
 import { useRequest } from "@/hooks/use-request";
+import { useStore } from "@/hooks/use-store";
+import { useRequests } from "@/hooks/use-requests";
 
 import { requestMethods } from "@/constants/request-methods";
 
 const RequestSection = () => {
   const setResponse = useResponse((state) => state.setResponse);
 
-  const { request } = useRequest();
+  const store = useStore((state) => state.store);
+
+  const { request, setRequest } = useRequest();
+
+  const updateRequests = useRequests((state) => state.updateRequests);
 
   const [requestMethod, setRequestMethod] = useState("get");
   const [url, setUrl] = useState("");
@@ -44,6 +51,37 @@ const RequestSection = () => {
   const { mutate: handleMakeRequest, isPending } = useMutation({
     mutationKey: [`make-${requestMethod}-request`],
     mutationFn: async () => {
+      if (store) {
+        const requestId = request?.id ?? uuidV4();
+
+        await updateRequests(
+          {
+            id: requestId,
+            formData,
+            headers,
+            queryParameters,
+            requestMethod,
+            url,
+            createdAt: new Date(),
+            json,
+            text,
+          },
+          store
+        );
+
+        setRequest({
+          id: requestId,
+          formData,
+          headers,
+          queryParameters,
+          requestMethod,
+          url,
+          createdAt: new Date(),
+          json,
+          text,
+        });
+      }
+
       let updatedUrl = url;
 
       if (
