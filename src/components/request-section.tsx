@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
 import toast from "react-hot-toast";
@@ -18,11 +18,14 @@ import JsonContentTab from "@/components/json-content-tab";
 import TextContentTab from "@/components/text-content-tab";
 
 import { useResponse } from "@/hooks/use-response";
+import { useRequest } from "@/hooks/use-request";
 
 import { requestMethods } from "@/constants/request-methods";
 
 const RequestSection = () => {
   const setResponse = useResponse((state) => state.setResponse);
+
+  const { request } = useRequest();
 
   const [requestMethod, setRequestMethod] = useState("get");
   const [url, setUrl] = useState("");
@@ -169,6 +172,22 @@ const RequestSection = () => {
     },
     [formData, setFormData]
   );
+
+  useEffect(() => {
+    if (request) {
+      setRequestMethod(request.requestMethod);
+      setUrl(request.url);
+      setHeaders(request.headers);
+      setQueryParameters(request.queryParameters);
+      setFormData(request.formData);
+    } else {
+      setRequestMethod("get");
+      setUrl("");
+      setHeaders([[false, "", ""]]);
+      setQueryParameters([[false, "", ""]]);
+      setFormData([[false, "", ""]]);
+    }
+  }, [request]);
   return (
     <div className="py-2 flex flex-col gap-y-1.5">
       <form

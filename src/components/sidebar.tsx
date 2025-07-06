@@ -4,11 +4,14 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { Button } from "@/components/ui/button";
 
 import { useRequests } from "@/hooks/use-requests";
+import { useRequest } from "@/hooks/use-request";
 
 import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
   const requests = useRequests((state) => state.requests);
+
+  const setRequest = useRequest((state) => state.setRequest);
   return (
     <div className="py-3 flex flex-col gap-y-4">
       <Button className="mx-2">
@@ -22,6 +25,7 @@ const Sidebar = () => {
             <div
               key={data.id}
               className="flex flex-col py-2 cursor-pointer hover:bg-rose-100 gap-y-0.5"
+              onClick={() => setRequest(data)}
             >
               <div className="flex gap-x-1.5 items-center px-2">
                 <div
