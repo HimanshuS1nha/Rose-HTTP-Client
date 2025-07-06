@@ -33,7 +33,13 @@ const Sidebar = () => {
                     "p-1 rounded-lg",
                     data.requestMethod === "get"
                       ? "bg-blue-500"
-                      : "bg-green-500"
+                      : data.requestMethod === "post"
+                      ? "bg-green-500"
+                      : data.requestMethod === "delete"
+                      ? "bg-primary"
+                      : data.requestMethod === "put"
+                      ? "bg-yellow-500"
+                      : "bg-purple-500"
                   )}
                 >
                   <p className="uppercase text-white font-semibold text-xs">
