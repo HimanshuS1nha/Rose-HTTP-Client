@@ -1,24 +1,14 @@
 import { Plus } from "lucide-react";
+import { formatDistanceToNowStrict } from "date-fns";
 
 import { Button } from "@/components/ui/button";
+
+import { useRequests } from "@/hooks/use-requests";
 
 import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
-  const dummyData = [
-    {
-      id: "1",
-      url: "http://localhost:3000",
-      method: "get",
-      createdAt: "2 days ago",
-    },
-    {
-      id: "2",
-      url: "http://localhost:3000/api/login",
-      method: "post",
-      createdAt: "1 day ago",
-    },
-  ];
+  const requests = useRequests((state) => state.requests);
   return (
     <div className="py-3 flex flex-col gap-y-4">
       <Button className="mx-2">
@@ -27,7 +17,7 @@ const Sidebar = () => {
       </Button>
 
       <div className="flex flex-col">
-        {dummyData.map((data) => {
+        {requests.map((data) => {
           return (
             <div
               key={data.id}
@@ -37,11 +27,13 @@ const Sidebar = () => {
                 <div
                   className={cn(
                     "p-1 rounded-lg",
-                    data.method === "get" ? "bg-blue-500" : "bg-green-500"
+                    data.requestMethod === "get"
+                      ? "bg-blue-500"
+                      : "bg-green-500"
                   )}
                 >
                   <p className="uppercase text-white font-semibold text-xs">
-                    {data.method}
+                    {data.requestMethod}
                   </p>
                 </div>
                 <p className="text-sm">
@@ -50,7 +42,9 @@ const Sidebar = () => {
                     : data.url}
                 </p>
               </div>
-              <p className="px-2.5 text-gray-700 text-xs">{data.createdAt}</p>
+              <p className="px-2.5 text-gray-700 text-xs">
+                {formatDistanceToNowStrict(data.createdAt)} ago
+              </p>
             </div>
           );
         })}
