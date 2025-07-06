@@ -3,6 +3,7 @@ use std::time::Instant;
 
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 #[derive(Serialize, Deserialize)]
 enum HttpError {
@@ -26,6 +27,8 @@ async fn make_request(
     url: &str,
     headers: Vec<String>,
     form: HashMap<String, String>,
+    json: Option<Value>,
+    text: Option<String>,
 ) -> Result<Response, HttpError> {
     let client = Client::new();
 
@@ -49,6 +52,14 @@ async fn make_request(
         } else {
             return Err(HttpError::InvalidHeadersError);
         }
+    }
+
+    if let Some(json) = json {
+        request_builder = request_builder.json(&json);
+    }
+
+    if let Some(text) = text {
+        request_builder = request_builder.body(text);
     }
 
     if form.len() > 0 {

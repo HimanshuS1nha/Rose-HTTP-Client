@@ -75,6 +75,8 @@ const RequestSection = () => {
           }
         }),
         form: new Map([form as [string, string]]),
+        json: json.trim().length > 0 ? JSON.parse(json) : null,
+        text: text.trim().length > 0 ? text : null,
       });
 
       return result as {
