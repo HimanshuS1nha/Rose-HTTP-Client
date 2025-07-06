@@ -38,7 +38,7 @@ npm run tauri dev
 
 ## Demo
 
-Live Demo - Coming Soon
+Live Demo - [Click Here](https://www.youtube.com/watch?v=kXlF8d1gTeQ)
 
 ## 🚀 About Me
 
