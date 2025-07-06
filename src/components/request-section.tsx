@@ -17,6 +17,7 @@ import KeyValueInput from "@/components/key-value-input";
 import { useResponse } from "@/hooks/use-response";
 
 import { requestMethods } from "@/constants/request-methods";
+import JsonContentTab from "./json-content-tab";
 
 const RequestSection = () => {
   const setResponse = useResponse((state) => state.setResponse);
@@ -32,6 +33,7 @@ const RequestSection = () => {
   const [formData, setFormData] = useState<[boolean, string, string][]>([
     [false, "", ""],
   ]);
+  const [json, setJson] = useState("");
 
   const { mutate: handleMakeRequest, isPending } = useMutation({
     mutationKey: [`make-${requestMethod}-request`],
@@ -289,6 +291,8 @@ const RequestSection = () => {
                 Form
               </TabsTrigger>
             </TabsList>
+
+            <JsonContentTab data={json} setData={setJson} />
 
             <KeyValueInput
               state={formData}
