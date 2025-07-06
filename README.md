@@ -1,7 +1,41 @@
-# Tauri + React + Typescript
+# Rose HTTP Client
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+Rose is a lightweight, intuitive HTTP client designed for seamless API testing, featuring a user-friendly interface and robust performance for developers and testers.
 
-## Recommended IDE Setup
+## Get Started
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- Install dependencies
+
+```bash
+npm install
+```
+
+- Run the app
+
+```bash
+npm run tauri dev
+```
+
+## Features
+
+- Send GET, POST, PUT, PATCH and DELETE requests
+- Send query parameters, headers, text data, json data and form data
+- Requests are persisted
+
+## TECH STACK USED
+
+- React.js
+- Tailwind CSS
+- Shadcn UI
+- Tauri
+- Zustand
+- Tanstack React Query
+- TypeScript
+
+## Demo
+
+Live Demo - Coming Soon
+
+## 🚀 About Me
+
+My name is Himanshu Sinha and I'm a full stack developer.
